@@ -1,0 +1,45 @@
+{
+  "name": "route53-backup-to-s3",
+  "version": "1.0.0",
+  "description": "Backup Amazon's Route53 zone files to S3",
+  "main": "index.js",
+  "bin": {
+    "route53-backup-to-s3": "bin/cmd.js"
+  },
+  "preferGlobal": "true",
+  "scripts": {
+    "test": "mocha tests/index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/garrows/route53-backup-to-s3.git"
+  },
+  "keywords": [
+    "route53",
+    "backup",
+    "amazon",
+    "AWS",
+    "S3",
+    "zonefile"
+  ],
+  "author": {
+    "name": "Glen Arrowsmith",
+    "email": "glen.arrowsmith@gmail.com"
+  },
+  "license": "GPL v3.0",
+  "bugs": {
+    "url": "https://github.com/garrows/route53-backup-to-s3/issues"
+  },
+  "homepage": "https://github.com/garrows/route53-backup-to-s3",
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "should": "^4.4.2"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "aws-sdk": "^2.1.4",
+    "commander": "^2.6.0",
+    "proxy-agent": "^1.1.0"
+  }
+}
