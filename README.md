@@ -25,7 +25,7 @@ Run
 ---
 
 ```
-route53-backup-to-s3 --config ./aws-credentials.json --s3Bucket s3://your-bucket/your-folder
+route53-backup-to-s3 --config ./aws-credentials.json --s3Bucket your-bucket --s3Folder your-folder
 ```
 
 Proxy
@@ -35,11 +35,4 @@ If you have the `https_proxy` environment variable set, the AWS API calls will g
 If you want to specify another proxy use the `--proxy` flag.
 ```
 route53-backup-to-s3 --config ./aws-credentials.json --s3Bucket s3://your-bucket/your-folder --proxy http://proxy.example.com:3128/
-```
-
-Testing
--------
-
-```
-npm test
 ```

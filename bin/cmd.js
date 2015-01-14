@@ -5,7 +5,8 @@ var program = require('commander'),
 
 program
   .version(packageInfo.version)
-  .option('-b, --s3bucket <bucket>', 'S3 bucket name (eg s3://your-bucket-name/your-folder)')
+  .option('-b, --s3bucket <bucket>', 'S3 bucket name.')
+  .option('-f, --s3folder <folder>', 'S3 folder. Defaults to route53-backups.')
   .option('-c, --config <path>', 'set config path. Defaults to ./aws-credentials.json')
   .option('-x, --proxy <server>', 'set the proxy server. Defaults to https_proxy environment variable.')
   .parse(process.argv);
@@ -13,6 +14,7 @@ program
 var Backuper = require('../index.js');
 var options = {
   s3bucket: program.s3bucket,
+  s3folder: program.s3folder,
   config: program.config,
   proxy: program.proxy
 };
