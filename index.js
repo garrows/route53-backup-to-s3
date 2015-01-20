@@ -10,17 +10,8 @@ function Backuper(opts) {
   var credentialsFilePath = './aws-credentials.json';
   options = opts;
   options.startTime = new Date();
-  if (opts.config) {
-    credentialsFilePath = opts.config;
-  }
 
-  if (fs.existsSync(credentialsFilePath)) {
-    AWS.config.loadFromPath(credentialsFilePath);
-  } else if (fs.existsSync(path.join(process.cwd(), credentialsFilePath))) {
-    AWS.config.loadFromPath(path.join(process.cwd(), credentialsFilePath));
-  } else {
-    console.warn('Warning: Can not find credentials file.')
-  }
+
 
   var proxy = process.env.https_proxy;
   proxy = opts.proxy ? opts.proxy : proxy;
@@ -35,8 +26,9 @@ function Backuper(opts) {
   }
 
   this.queue = async.queue(this.processZoneFile.bind(this), 1);
-  this.s3 = new AWS.S3();
-  this.route53 = new AWS.Route53();
+
+  this.s3 = this.getConfiguredService('S3', opts.s3config);
+  this.route53 = this.getConfiguredService('Route53', opts.r53config);
 
 }
 
@@ -160,6 +152,7 @@ Backuper.prototype = {
 
     zoneFile.recordSets = recordSets;
     var backupStr = JSON.stringify(zoneFile);
+    console.log(options.s3folder, options.startTime.toISOString(), zoneFile.Name);
     var s3Path = path.join(options.s3folder, options.startTime.toISOString(), zoneFile.Name);
     var params = {
       Bucket: options.s3bucket,
@@ -175,6 +168,32 @@ Backuper.prototype = {
       console.log('Successfully backed up ' + zoneFile.Name + ' to s3://' + options.s3bucket + '/' + s3Path);
       callback();
     });
+  },
+
+  getConfiguredService: function(serviceName, configPath) {
+    var credentialsFilePath;
+    if (configPath) {
+      credentialsFilePath = configPath;
+    }
+
+    var readConfig = function(path) {
+      try {
+        return JSON.parse(fs.readFileSync(path, 'utf8'));
+      } catch (e) {
+        console.error('Error parsing config file.', e);
+      }
+      return {};
+    };
+
+    var config = {};
+    if (typeof credentialsFilePath == 'string' && fs.existsSync(credentialsFilePath)) {
+      config = readConfig(credentialsFilePath);
+    } else if (typeof credentialsFilePath == 'string' && fs.existsSync(path.join(process.cwd(), credentialsFilePath))) {
+      config = readConfig(path.join(process.cwd(), credentialsFilePath));
+    } else {
+      console.warn('Warning: Can not find credentials file for ' + serviceName + '.');
+    }
+    return new AWS[serviceName](config);
   }
 }
 

@@ -28,6 +28,15 @@ Run
 route53-backup-to-s3 --config ./aws-credentials.json --s3Bucket your-bucket --s3Folder your-folder
 ```
 
+Multi Credentials
+-----------------
+
+If you need to separate your Route53 and S3 credentials use the `--r53config` and `--s3config` flags.
+
+```
+route53-backup-to-s3 --r53config ./r53-credentials.json --s3config ./s3-credentials.json --s3Bucket your-bucket --s3Folder your-folder
+```
+
 Proxy
 -----
 If you have the `https_proxy` environment variable set, the AWS API calls will go through that.
